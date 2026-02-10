@@ -81,9 +81,15 @@ async function startScanner() {
         const codigo = extraerCodigo(decodedText);
         console.log("Código extraído:", codigo);
       
+        if (!codigo) {
+          setStatus("No se encontró un código válido en el QR.", "error");
+          return;
+        }
+      
         barcodeInput.value = codigo;
         lookupBarcode(codigo);
       }
+
     );
 
     scannerRunning = true;
@@ -108,10 +114,9 @@ async function stopScanner() {
   setStatus('Escáner detenido.', '');
 }
 
-function lookupBarcode(rawCode) {
-  const candidates = extractCodeCandidates(rawCode);
-
-  if (candidates.length === 0) {
+function lookupBarcode(barcode) {
+  const code = String(barcode || '').trim().toUpperCase();
+  if (!code) {
     setStatus('Introduce o escanea un código válido.', 'error');
     hideResult();
     return;
@@ -119,64 +124,17 @@ function lookupBarcode(rawCode) {
 
   const product = products.find((item) => {
     const dbCode = String(item.barcode || '').trim().toUpperCase();
-    return candidates.some((candidate) => candidate.toUpperCase() === dbCode);
+    return dbCode === code;
   });
 
   if (!product) {
-    setStatus(`No se encontró el código ${candidates[0]} en la base de datos.`, 'error');
+    setStatus(`No se encontró el código ${code} en la base de datos.`, 'error');
     hideResult();
     return;
   }
 
   setStatus('');
   renderResult(product);
-}
-
-function extractCodeCandidates(rawCode) {
-  const normalized = String(rawCode || '').trim();
-  if (!normalized) {
-    return [];
-  }
-
-  const values = new Set([normalized]);
-
-  try {
-    values.add(decodeURIComponent(normalized));
-  } catch (error) {
-    // ignorar contenido no codificado
-  }
-
-  for (const value of Array.from(values)) {
-    const upperMatch = value.toUpperCase().match(/F\d{6,}/g);
-    if (upperMatch) {
-      upperMatch.forEach((match) => values.add(match));
-    }
-
-    value
-      .split(/[\s,;|]+/)
-      .filter(Boolean)
-      .forEach((part) => values.add(part));
-
-    try {
-      const parsed = new URL(value);
-      parsed.pathname
-        .split('/')
-        .filter(Boolean)
-        .forEach((part) => values.add(part));
-
-      parsed.searchParams.forEach((paramValue) => {
-        if (paramValue) {
-          values.add(paramValue);
-        }
-      });
-    } catch (error) {
-      // no es URL válida, continuar
-    }
-  }
-
-  return Array.from(values)
-    .map((item) => item.trim())
-    .filter(Boolean);
 }
 
 function renderResult(product) {
@@ -220,11 +178,10 @@ function setStatus(message, type = '') {
   }
 }
 function extraerCodigo(text) {
-  const partes = text.split(';');
-  if (partes.length >= 2) {
-    return partes[1];
-  }
-  return null; // tambien se podria lanzar error
+  const normalized = String(text || '').toUpperCase();
+  const match = normalized.match(/\bF\d{6}\b/);
+  return match ? match[0] : null;
 }
+
   
 
