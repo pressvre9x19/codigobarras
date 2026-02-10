@@ -130,7 +130,7 @@ function renderResult(product) {
 
   // Estilos comunes
   dd.style.padding = '20px';
-  dd.style.fontSize = '2rem';
+  dd.style.fontSize = '3rem';
   dd.style.fontWeight = 'bold';
   dd.style.borderRadius = '8px';
   dd.style.display = 'inline-block';
