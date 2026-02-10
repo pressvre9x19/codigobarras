@@ -76,9 +76,13 @@ async function startScanner() {
         ]
       },
       (decodedText) => {
-        barcodeInput.value = extraerCodigo(decodedText);
-        
-        lookupBarcode(extraerCodigo(decodedText));
+        console.log("Leído:", decodedText);
+      
+        const codigo = extraerCodigo(decodedText);
+        console.log("Código extraído:", codigo);
+      
+        barcodeInput.value = codigo;
+        lookupBarcode(codigo);
       }
     );
 
@@ -163,7 +167,7 @@ function setStatus(message, type = '') {
   if (type) {
     statusBox.classList.add(type);
   }
-
+}
 function extraerCodigo(text) {
   const partes = text.split(';');
   if (partes.length >= 2) {
@@ -172,4 +176,4 @@ function extraerCodigo(text) {
   return null; // tambien se podria lanzar error
 }
   
-}
+
