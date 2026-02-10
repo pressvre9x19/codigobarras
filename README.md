@@ -1,4 +1,4 @@
-# Web estática: lector de código de barras
+# Lector de código de barras
 
 Aplicación web estática (compatible con GitHub Pages) para:
 
