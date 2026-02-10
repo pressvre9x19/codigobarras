@@ -140,9 +140,6 @@ function renderResult(product) {
   dd.style.minWidth = '80px';
 
   resultBox.appendChild(dd);
-}
-
-
   resultBox.hidden = false;
 }
 
