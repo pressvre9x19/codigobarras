@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consulta por Código de Barras</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"
+      defer
+    ></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Consulta de productos por código de barras</h1>
+      <p class="description">
+        Escanea un código de barras con la cámara o escríbelo manualmente para consultar la base de datos.
+      </p>
+
+      <section class="card">
+        <h2>Escáner</h2>
+        <div class="actions">
+          <button id="start-scan">Iniciar escaneo</button>
+          <button id="stop-scan" class="secondary" disabled>Detener escaneo</button>
+        </div>
+        <div id="reader" class="reader" aria-live="polite"></div>
+      </section>
+
+      <section class="card">
+        <h2>Búsqueda manual</h2>
+        <form id="manual-form">
+          <label for="barcode-input">Código de barras</label>
+          <div class="input-row">
+            <input id="barcode-input" name="barcode" type="text" inputmode="numeric" required placeholder="Ej. 7501234567890" />
+            <button type="submit">Buscar</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Resultado</h2>
+        <div id="status" class="status">Esperando lectura...</div>
+        <dl id="result" class="result" hidden></dl>
+      </section>
+    </main>
+  </body>
+</html>

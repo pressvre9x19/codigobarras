@@ -1,0 +1,23 @@
+[
+  {
+    "barcode": "7501234567890",
+    "nombre": "Leche Entera 1L",
+    "categoria": "Lácteos",
+    "precio": 1.15,
+    "stock": 32
+  },
+  {
+    "barcode": "7509876543210",
+    "nombre": "Pan Integral",
+    "categoria": "Panadería",
+    "precio": 1.85,
+    "stock": 12
+  },
+  {
+    "barcode": "7791234500012",
+    "nombre": "Café Molido 500g",
+    "categoria": "Despensa",
+    "precio": 5.49,
+    "stock": 8
+  }
+]
