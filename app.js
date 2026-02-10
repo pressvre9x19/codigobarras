@@ -76,8 +76,9 @@ async function startScanner() {
         ]
       },
       (decodedText) => {
-        barcodeInput.value = decodedText;
-        lookupBarcode(decodedText);
+        barcodeInput.value = extraerCodigo(decodedText);
+        
+        lookupBarcode(extraerCodigo(decodedText));
       }
     );
 
@@ -162,4 +163,13 @@ function setStatus(message, type = '') {
   if (type) {
     statusBox.classList.add(type);
   }
+
+function extraerCodigo(text) {
+  const partes = text.split(';');
+  if (partes.length >= 2) {
+    return partes[1];
+  }
+  return null; // tambien se podria lanzar error
+}
+  
 }
