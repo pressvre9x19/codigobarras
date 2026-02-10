@@ -125,15 +125,23 @@ function lookupBarcode(rawCode) {
 function renderResult(product) {
   resultBox.innerHTML = '';
 
-  Object.entries(product).forEach(([key, value]) => {
-    const dt = document.createElement('dt');
-    dt.textContent = LABELS[key] || key;
+  const dd = document.createElement('div');
+  dd.textContent = String(product.numero);
 
-    const dd = document.createElement('dd');
-    dd.textContent = key === 'precio' ? `${Number(value).toFixed(2)} €` : String(value);
+  // Fondo con el color del campo "color"
+  dd.style.backgroundColor = product.color || '#ccc';
+  //dd.style.color = '#fff';
+  dd.style.padding = '20px';
+  dd.style.fontSize = '2rem';
+  dd.style.fontWeight = 'bold';
+  dd.style.borderRadius = '8px';
+  dd.style.display = 'inline-block';
+  dd.style.textAlign = 'center';
+  dd.style.minWidth = '80px';
 
-    resultBox.append(dt, dd);
-  });
+  resultBox.appendChild(dd);
+}
+
 
   resultBox.hidden = false;
 }
