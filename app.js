@@ -118,7 +118,7 @@ function lookupBarcode(rawCode) {
     return;
   }
 
-  setStatus(`Código ${barcode} encontrado.`, 'success');
+  //setStatus(`Código ${barcode} encontrado.`, 'success');
   renderResult(product);
 }
 
@@ -128,9 +128,7 @@ function renderResult(product) {
   const dd = document.createElement('div');
   dd.textContent = String(product.numero);
 
-  // Fondo con el color del campo "color"
-  dd.style.backgroundColor = product.color || '#ccc';
-  //dd.style.color = '#fff';
+  // Estilos comunes
   dd.style.padding = '20px';
   dd.style.fontSize = '2rem';
   dd.style.fontWeight = 'bold';
@@ -138,6 +136,15 @@ function renderResult(product) {
   dd.style.display = 'inline-block';
   dd.style.textAlign = 'center';
   dd.style.minWidth = '80px';
+
+  // Color según el campo "color"
+  if (product.color === "Amarillo") {
+    dd.style.backgroundColor = '#FFFF00';
+    dd.style.color = '#000'; // negro para que se lea sobre amarillo
+  } else {
+    dd.style.backgroundColor = '#FF0000';
+    dd.style.color = '#fff'; // blanco para que se lea sobre rojo
+  }
 
   resultBox.appendChild(dd);
   resultBox.hidden = false;
