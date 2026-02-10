@@ -118,7 +118,7 @@ function lookupBarcode(rawCode) {
     return;
   }
 
-  //setStatus(`Código ${barcode} encontrado.`, 'success');
+  setStatus(``);
   renderResult(product);
 }
 
