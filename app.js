@@ -66,6 +66,7 @@ async function startScanner() {
         fps: 10,
         qrbox: { width: 260, height: 120 },
         formatsToSupport: [
+          Html5QrcodeSupportedFormats.QR_CODE,
           Html5QrcodeSupportedFormats.EAN_13,
           Html5QrcodeSupportedFormats.EAN_8,
           Html5QrcodeSupportedFormats.CODE_128,
