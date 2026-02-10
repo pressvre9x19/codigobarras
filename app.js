@@ -64,7 +64,7 @@ async function startScanner() {
       { facingMode: 'environment' },
       {
         fps: 10,
-        qrbox: { width: 240, height: 240 },
+        qrbox: { width: 260, height: 260 },
         formatsToSupport: [
           Html5QrcodeSupportedFormats.QR_CODE,
           Html5QrcodeSupportedFormats.EAN_13,
@@ -76,8 +76,13 @@ async function startScanner() {
         ]
       },
       (decodedText) => {
-        barcodeInput.value = decodedText;
-        lookupBarcode(decodedText);
+        console.log("Leído:", decodedText);
+      
+        const codigo = extraerCodigo(decodedText);
+        console.log("Código extraído:", codigo);
+      
+        barcodeInput.value = codigo;
+        lookupBarcode(codigo);
       }
     );
 
@@ -214,3 +219,12 @@ function setStatus(message, type = '') {
     statusBox.classList.add(type);
   }
 }
+function extraerCodigo(text) {
+  const partes = text.split(';');
+  if (partes.length >= 2) {
+    return partes[1];
+  }
+  return null; // tambien se podria lanzar error
+}
+  
+
