@@ -89,7 +89,7 @@ async function startScanner() {
     scannerRunning = true;
     startScanBtn.disabled = true;
     stopScanBtn.disabled = false;
-    setStatus('Escáner activo. Apunta la cámara al código de barras.', 'success');
+    setStatus('Escáner activo. Para QR usa la guía cuadrada; para barras, centra el código horizontalmente.', 'success');
   } catch (error) {
     setStatus('No se pudo iniciar la cámara. Verifica permisos del navegador.', 'error');
   }
@@ -109,23 +109,74 @@ async function stopScanner() {
 }
 
 function lookupBarcode(rawCode) {
-  const barcode = String(rawCode || '').trim();
-  if (!barcode) {
+  const candidates = extractCodeCandidates(rawCode);
+
+  if (candidates.length === 0) {
     setStatus('Introduce o escanea un código válido.', 'error');
     hideResult();
     return;
   }
 
-  const product = products.find((item) => item.barcode === barcode);
+  const product = products.find((item) => {
+    const dbCode = String(item.barcode || '').trim().toUpperCase();
+    return candidates.some((candidate) => candidate.toUpperCase() === dbCode);
+  });
 
   if (!product) {
-    setStatus(`No se encontró el código ${barcode} en la base de datos.`, 'error');
+    setStatus(`No se encontró el código ${candidates[0]} en la base de datos.`, 'error');
     hideResult();
     return;
   }
 
-  setStatus(``);
+  setStatus('');
   renderResult(product);
+}
+
+function extractCodeCandidates(rawCode) {
+  const normalized = String(rawCode || '').trim();
+  if (!normalized) {
+    return [];
+  }
+
+  const values = new Set([normalized]);
+
+  try {
+    values.add(decodeURIComponent(normalized));
+  } catch (error) {
+    // ignorar contenido no codificado
+  }
+
+  for (const value of Array.from(values)) {
+    const upperMatch = value.toUpperCase().match(/F\d{6,}/g);
+    if (upperMatch) {
+      upperMatch.forEach((match) => values.add(match));
+    }
+
+    value
+      .split(/[\s,;|]+/)
+      .filter(Boolean)
+      .forEach((part) => values.add(part));
+
+    try {
+      const parsed = new URL(value);
+      parsed.pathname
+        .split('/')
+        .filter(Boolean)
+        .forEach((part) => values.add(part));
+
+      parsed.searchParams.forEach((paramValue) => {
+        if (paramValue) {
+          values.add(paramValue);
+        }
+      });
+    } catch (error) {
+      // no es URL válida, continuar
+    }
+  }
+
+  return Array.from(values)
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 function renderResult(product) {
